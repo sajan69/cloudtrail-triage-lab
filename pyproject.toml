@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloudtrail-triage-lab"
+version = "0.1.0"
+description = "Local CloudTrail event validation and investigation tools"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["duckdb==1.5.6", "pytz==2026.5"]
+
+[project.scripts]
+triage = "cloudtrail_triage.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

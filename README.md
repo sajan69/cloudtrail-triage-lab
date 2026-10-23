@@ -1,6 +1,6 @@
 # CloudTrail Triage Lab
 
-**Status: scoped; implementation has not started.**
+**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Detection, dashboard and evaluation work is in progress.
 
 A local tool for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
 
@@ -19,17 +19,33 @@ An analyst needs to connect audit events into a useful investigation rather than
 
 The detection rules and thresholds will be documented and tested during implementation. Logging prerequisites and incomplete telemetry must be explicit; no blanket claim of detecting every attack is intended.
 
-No performance or detection results exist yet. Implementation and evaluation are pending.
+No performance or detection results exist yet. See [implementation status](ROADMAP.md) and the [input contract](docs/INPUT_FORMAT.md).
 
 ## Data and execution
 
-The default demo will run locally with synthetic fixtures and no AWS account, production logs, paid APIs or cloud deployment. Real audit logs can contain sensitive identities and infrastructure details; they must never be committed. Setup commands will be added when they have been implemented and tested.
+Ingestion runs locally with no AWS account, paid APIs or cloud deployment. Real audit logs and normalized databases contain sensitive identities and infrastructure details; keep them out of version control.
+
+## Install and use (Python 3.11+)
+
+```sh
+python -m venv .venv
+# macOS/Linux:
+. .venv/bin/activate
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install -e .
+mkdir data
+triage ingest path/to/events.json --db data/events.duckdb
+triage summary --db data/events.duckdb
+python -m unittest discover -s tests -v
+```
+
+Inputs are limited to 10 MiB and 20,000 records. Imports are strict by default; `--skip-invalid` skips schema-invalid records, while syntax errors or conflicting duplicates still abort. An exact re-import is a no-op with duplicate counts. Errors report codes without echoing input values. See [supported fields and atomicity](docs/INPUT_FORMAT.md).
 
 ## Progress and finish line
 
 - [x] Confirm repository access and agree a bounded scope.
-- [ ] Add project scaffolding and safe local-data ignore rules.
-- [ ] Implement ingestion and data-quality tests.
+- [x] Add project scaffolding and safe local-data ignore rules.
+- [x] Implement ingestion and data-quality tests.
 - [ ] Add seeded scenarios and three detection rules.
 - [ ] Add dashboard, evidence timeline and exports.
 - [ ] Publish held-out evaluation and reproducible demo.
@@ -38,3 +54,4 @@ The default demo will run locally with synthetic fixtures and no AWS account, pr
 ## Design reference
 
 [AWS incident-response guide for CloudTrail investigations](https://aws.amazon.com/blogs/security/incident-response-guide-for-aws-cloudtrail-investigations-part-2/) informs the proposed investigation workflow. Implementation will verify current AWS event fields and logging prerequisites against official documentation.
+

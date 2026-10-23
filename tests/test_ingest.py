@@ -125,6 +125,12 @@ class IngestionTests(unittest.TestCase):
         b = event(userIdentity={"type": "IdentityCenterUser", "onBehalfOf": {"identityStoreArn": "store", "userId": "a:b"}})
         self.assertNotEqual(normalize(a).principal, normalize(b).principal)
 
+    def test_arn_is_preserved_and_cannot_alias_principal_id_namespace(self):
+        self.assertEqual(normalize(event()).principal, event()["userIdentity"]["arn"])
+        record = event(); record["userIdentity"]["arn"] = "id:synthetic"
+        with self.assertRaisesRegex(InputError, "invalid_principal_arn"):
+            normalize(record)
+
     def test_bad_fields_are_rejected_and_unknown_mfa_is_not_false(self):
         for changes in [{"eventTime": "2026-01-01T00:00:00"}, {"recipientAccountId": "wrong"},
                         {"eventID": "bad"}, {"eventName": "x\nsecret"}, {"userIdentity": []}]:

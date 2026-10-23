@@ -1,6 +1,6 @@
 # CloudTrail Triage Lab
 
-**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Reproducible synthetic fixtures are available; detection, dashboard and evaluation work is in progress.
+**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Synthetic fixtures and three explainable detection rules are available. Dashboard and held-out evaluation work is in progress.
 
 A local tool for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
 
@@ -19,7 +19,7 @@ An analyst needs to connect audit events into a useful investigation rather than
 
 The detection rules and thresholds will be documented and tested during implementation. Logging prerequisites and incomplete telemetry must be explicit; no blanket claim of detecting every attack is intended.
 
-No performance or detection results exist yet. See [implementation status](ROADMAP.md) and the [input contract](docs/INPUT_FORMAT.md).
+No held-out accuracy or performance measurements have been published. See [implementation status](ROADMAP.md) and the [input contract](docs/INPUT_FORMAT.md).
 
 ## Data and execution
 
@@ -45,20 +45,25 @@ python -m unittest discover -s tests -v
 triage generate --out data/demo --seed 42
 triage ingest data/demo/events.json --db data/demo.duckdb
 triage summary --db data/demo.duckdb
+triage detect --db data/demo.duckdb
 # Re-importing the equivalent JSONL adds no new events:
 triage ingest data/demo/events.jsonl --db data/demo.duckdb
 ```
 
-The default fixture has 132 synthetic events in 13 labeled cases. Labels remain separate from events and include benign lookalikes that should remain visible in later false-positive analysis. The generator requires a fresh output directory. See [scenario design](docs/SCENARIOS.md).
+The default fixture has 132 synthetic events in 13 labeled cases. Labels remain separate from events and include benign lookalikes that should remain visible in later false-positive analysis. The generator requires a fresh output directory. See [scenario design](docs/SCENARIOS.md). The development fixture produces five findings, including two deliberate benign false positives; these are development checks, not an accuracy estimate. [Rule definitions and evidence](docs/DETECTIONS.md) explain thresholds, identity/MFA handling and logging coverage.
 
 Inputs are limited to 10 MiB and 20,000 records. Imports are strict by default; `--skip-invalid` skips schema-invalid records, while syntax errors or conflicting duplicates still abort. An exact re-import is a no-op with duplicate counts. Errors report codes without echoing input values. See [supported fields and atomicity](docs/INPUT_FORMAT.md).
+
+## Verification
+
+36 automated tests cover ingestion atomicity, data minimization, deterministic fixtures, rolling-window boundaries, account/actor separation, MFA semantics and read-only detection. CI runs the suite and synthetic CLI workflow on Python 3.11, 3.12 and 3.13. Check the [CI results](https://github.com/sajan69/cloudtrail-triage-lab/actions/workflows/ci.yml) for the current revision.
 
 ## Progress and finish line
 
 - [x] Confirm repository access and agree a bounded scope.
 - [x] Add project scaffolding and safe local-data ignore rules.
 - [x] Implement ingestion and data-quality tests.
-- [ ] Add seeded scenarios and three detection rules.
+- [x] Add seeded scenarios and three detection rules.
 - [ ] Add dashboard, evidence timeline and exports.
 - [ ] Publish held-out evaluation and reproducible demo.
 - [ ] Pass CI and document setup, architecture, evaluation methods and limitations.

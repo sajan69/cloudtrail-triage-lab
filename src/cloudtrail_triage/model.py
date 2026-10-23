@@ -83,7 +83,9 @@ def normalize(record) -> Event:
     identity_type = text(identity.get("type", "Unknown"), "identity_type", required=True, limit=64)
     principal = None
     if identity.get("arn") is not None:
-        principal = "arn:" + text(identity["arn"], "principal", required=True)
+        principal = text(identity["arn"], "principal", required=True)
+        if not principal.startswith("arn:"):
+            raise InputError("invalid_principal_arn")
     elif identity.get("principalId") is not None:
         principal = "id:" + text(identity["principalId"], "principal", required=True)
     elif identity.get("onBehalfOf") is not None:

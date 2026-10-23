@@ -11,6 +11,7 @@ import duckdb
 from .ingest import ingest_file, summarize
 from .model import InputError
 from .scenarios import write_dataset
+from .detect import detect
 
 
 def main(argv=None):
@@ -28,12 +29,16 @@ def main(argv=None):
     generate.add_argument("--seed", type=int, default=42)
     generate.add_argument("--split", choices=["development", "holdout"], default="development")
     generate.add_argument("--background", type=int, default=100)
+    detection = commands.add_parser("detect", help="Emit explainable investigation findings as JSON")
+    detection.add_argument("--db", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "ingest":
             result = asdict(ingest_file(args.source, args.db, input_format=args.format, skip_invalid=args.skip_invalid))
         elif args.command == "generate":
             result = write_dataset(args.out, seed=args.seed, split=args.split, background=args.background)
+        elif args.command == "detect":
+            result = detect(args.db)
         else:
             result = summarize(args.db)
         print(json.dumps(result, sort_keys=True, indent=2))

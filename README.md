@@ -1,6 +1,6 @@
 # CloudTrail Triage Lab
 
-**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Detection, dashboard and evaluation work is in progress.
+**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Reproducible synthetic fixtures are available; detection, dashboard and evaluation work is in progress.
 
 A local tool for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
 
@@ -38,6 +38,18 @@ triage ingest path/to/events.json --db data/events.duckdb
 triage summary --db data/events.duckdb
 python -m unittest discover -s tests -v
 ```
+
+## Synthetic fixture
+
+```sh
+triage generate --out data/demo --seed 42
+triage ingest data/demo/events.json --db data/demo.duckdb
+triage summary --db data/demo.duckdb
+# Re-importing the equivalent JSONL adds no new events:
+triage ingest data/demo/events.jsonl --db data/demo.duckdb
+```
+
+The default fixture has 132 synthetic events in 13 labeled cases. Labels remain separate from events and include benign lookalikes that should remain visible in later false-positive analysis. The generator requires a fresh output directory. See [scenario design](docs/SCENARIOS.md).
 
 Inputs are limited to 10 MiB and 20,000 records. Imports are strict by default; `--skip-invalid` skips schema-invalid records, while syntax errors or conflicting duplicates still abort. An exact re-import is a no-op with duplicate counts. Errors report codes without echoing input values. See [supported fields and atomicity](docs/INPUT_FORMAT.md).
 

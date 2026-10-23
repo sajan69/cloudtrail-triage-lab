@@ -2,7 +2,7 @@
 
 **Status: scoped; implementation has not started.**
 
-A local portfolio project for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
+A local tool for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
 
 ## Problem and intended users
 
@@ -15,19 +15,11 @@ An analyst needs to connect audit events into a useful investigation rather than
 3. Implement three explainable detection rules: permission-probing bursts, console sign-in without MFA, and suspicious same-principal activity across regions involving AI services.
 4. Provide a lightweight local dashboard with filters, an evidence timeline and CSV/JSON investigation exports.
 5. Evaluate rules on held-out scenarios separately from threshold tuning. Report actual confusion counts, precision, recall and false positives.
-6. Add automated tests, CI, a credential-free demo, an architecture/security guide and evidence-based resume bullet candidates.
+6. Add automated tests, CI, a credential-free demo, architecture and security documentation.
 
 The detection rules and thresholds will be documented and tested during implementation. Logging prerequisites and incomplete telemetry must be explicit; no blanket claim of detecting every attack is intended.
 
-## Portfolio evidence
-
-| Target role | Planned evidence |
-| --- | --- |
-| Data analyst | Data validation, SQL analysis, data quality reporting and useful visual findings |
-| Security analyst | Evidence timelines, explainable detections, false-positive analysis and investigation notes |
-| Software engineer | Maintainable Python modules, clear interfaces, automated tests and CI |
-
-No performance or detection results exist yet. This repo is not resume-ready until its working demo and evaluation can be reproduced.
+No performance or detection results exist yet. Implementation and evaluation are pending.
 
 ## Data and execution
 
@@ -41,14 +33,8 @@ The default demo will run locally with synthetic fixtures and no AWS account, pr
 - [ ] Add seeded scenarios and three detection rules.
 - [ ] Add dashboard, evidence timeline and exports.
 - [ ] Publish held-out evaluation and reproducible demo.
-- [ ] Pass CI and document limitations, resume candidates and an interview walkthrough.
-
-A finished project must meet these criteria; it will not grow indefinitely to generate commits. Daily work targets 5–6 substantive commits when justified, with no empty or cosmetic filler commits.
+- [ ] Pass CI and document setup, architecture, evaluation methods and limitations.
 
 ## Design reference
 
 [AWS incident-response guide for CloudTrail investigations](https://aws.amazon.com/blogs/security/incident-response-guide-for-aws-cloudtrail-investigations-part-2/) informs the proposed investigation workflow. Implementation will verify current AWS event fields and logging prerequisites against official documentation.
-
-## Assistance
-
-This project is being developed with an AI coding assistant under Sajan Adhikari's direction. Claims about testing, performance, deployment and personal contributions must remain verifiable.

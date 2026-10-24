@@ -12,6 +12,7 @@ from .ingest import ingest_file, summarize
 from .model import InputError
 from .scenarios import write_dataset
 from .detect import detect
+from .queries import Filters, timeline
 
 
 def main(argv=None):
@@ -31,6 +32,14 @@ def main(argv=None):
     generate.add_argument("--background", type=int, default=100)
     detection = commands.add_parser("detect", help="Emit explainable investigation findings as JSON")
     detection.add_argument("--db", type=Path, required=True)
+    investigation = commands.add_parser("timeline", help="Read a filtered UTC event timeline")
+    investigation.add_argument("--db", type=Path, required=True)
+    for field in ["account", "principal", "region", "source"]:
+        investigation.add_argument("--" + field)
+    investigation.add_argument("--from", dest="started_at")
+    investigation.add_argument("--until", dest="ended_at")
+    investigation.add_argument("--limit", type=int, default=100)
+    investigation.add_argument("--offset", type=int, default=0)
     args = parser.parse_args(argv)
     try:
         if args.command == "ingest":
@@ -39,6 +48,9 @@ def main(argv=None):
             result = write_dataset(args.out, seed=args.seed, split=args.split, background=args.background)
         elif args.command == "detect":
             result = detect(args.db)
+        elif args.command == "timeline":
+            filters = Filters(**{key: getattr(args, key) for key in ["account", "principal", "region", "source", "started_at", "ended_at"]})
+            result = timeline(args.db, filters, limit=args.limit, offset=args.offset)
         else:
             result = summarize(args.db)
         print(json.dumps(result, sort_keys=True, indent=2))

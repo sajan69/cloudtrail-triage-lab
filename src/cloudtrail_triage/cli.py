@@ -15,6 +15,7 @@ from .detect import detect
 from .queries import Filters, timeline
 from .exports import render_export, write_export
 from .dashboard import serve
+from .evaluate import evaluate_suite
 
 
 def main(argv=None):
@@ -57,6 +58,8 @@ def main(argv=None):
     dashboard = commands.add_parser("serve", help="Open a token-protected read-only loopback dashboard")
     dashboard.add_argument("--db", type=Path, required=True)
     dashboard.add_argument("--port", type=int, default=8765)
+    evaluation = commands.add_parser("evaluate", help="Evaluate fixed rules on reserved synthetic holdout seeds")
+    evaluation.add_argument("--seed", type=int, action="append")
     args = parser.parse_args(argv)
     try:
         if args.command == "serve":
@@ -68,6 +71,8 @@ def main(argv=None):
             result = write_dataset(args.out, seed=args.seed, split=args.split, background=args.background)
         elif args.command == "detect":
             result = detect(args.db)
+        elif args.command == "evaluate":
+            result = evaluate_suite() if args.seed is None else evaluate_suite(tuple(args.seed))
         elif args.command == "timeline":
             filters = Filters(**{key: getattr(args, key) for key in ["account", "principal", "region", "source", "started_at", "ended_at"]})
             result = timeline(args.db, filters, limit=args.limit, offset=args.offset)

@@ -14,6 +14,7 @@ from .scenarios import write_dataset
 from .detect import detect
 from .queries import Filters, timeline
 from .exports import render_export, write_export
+from .dashboard import serve
 
 
 def main(argv=None):
@@ -53,8 +54,14 @@ def main(argv=None):
         export.add_argument("--" + field)
     export.add_argument("--from", dest="started_at")
     export.add_argument("--until", dest="ended_at")
+    dashboard = commands.add_parser("serve", help="Open a token-protected read-only loopback dashboard")
+    dashboard.add_argument("--db", type=Path, required=True)
+    dashboard.add_argument("--port", type=int, default=8765)
     args = parser.parse_args(argv)
     try:
+        if args.command == "serve":
+            serve(args.db, args.port)
+            return 0
         if args.command == "ingest":
             result = asdict(ingest_file(args.source, args.db, input_format=args.format, skip_invalid=args.skip_invalid))
         elif args.command == "generate":

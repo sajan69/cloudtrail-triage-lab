@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CloudTrail Triage Lab</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body><header><div><p class="eyebrow">CLOUD ACTIVITY · LOCAL INVESTIGATION</p><h1>CloudTrail Triage Lab</h1><p>Follow the evidence from a finding to the events behind it.</p></div><span class="badge">Read-only · loopback only</span></header>
+<main><p class="notice">Findings are investigation leads, not proof of compromise. Missing telemetry can hide activity.</p>
+<p id="error" role="alert" hidden></p><p id="status" role="status">Loading local data…</p>
+<section class="stats" aria-label="Summary"><article><span>Stored events</span><strong id="event-count">—</strong></article><article><span>Matching findings</span><strong id="finding-count">—</strong></article><article><span>Accounts</span><strong id="account-count">—</strong></article><article><span>Uncorrelatable events</span><strong id="unknown-count">—</strong></article></section>
+<form id="filters" class="card"><h2>Investigation filters</h2><div class="filter-grid">
+<label>Account<select id="account"><option value="">All accounts</option></select></label>
+<label>Actor identifier<input id="principal" placeholder="Exact ARN or normalized identifier"></label>
+<label>From (UTC / ISO offset)<input id="started_at" placeholder="2026-01-01T00:00:00Z"></label>
+<label>Until (UTC / ISO offset)<input id="ended_at" placeholder="2026-01-02T00:00:00Z"></label>
+<label>Rule<select id="rule"><option value="">All rules</option><option>CT001</option><option>CT002</option><option>CT003</option></select></label>
+<label>Priority<select id="severity"><option value="">All priorities</option><option value="high">High</option><option value="medium">Medium</option></select></label>
+<label>Event service<select id="source"><option value="">All services</option></select></label>
+<label>Event Region<select id="region"><option value="">All Regions</option></select></label></div>
+<div class="toolbar"><button type="submit">Apply filters</button><button type="button" id="reset" class="secondary">Reset</button><small>Service/Region filter the timeline only. Rule/priority filter findings only.</small></div></form>
+<div class="columns"><section class="card"><div class="section-heading"><h2>Findings</h2><div><button class="secondary" data-export="findings" data-format="json">JSON</button><button class="secondary" data-export="findings" data-format="csv">CSV</button></div></div><div id="findings" class="finding-list"></div></section>
+<section class="card"><h2 id="evidence-heading" tabindex="-1">Finding evidence</h2><p id="evidence-hint">Select a finding to inspect its full event context.</p><pre id="finding-detail"></pre><div class="toolbar"><button class="secondary" data-export="evidence" data-format="json" disabled>Evidence JSON</button><button class="secondary" data-export="evidence" data-format="csv" disabled>Evidence CSV</button></div><div id="evidence-table" class="table-wrap"></div><div class="toolbar"><button id="evidence-prev" class="secondary" disabled>Previous</button><span id="evidence-page"></span><button id="evidence-next" class="secondary" disabled>Next</button></div></section></div>
+<section class="card"><div class="section-heading"><h2>Event timeline</h2><div><button class="secondary" data-export="events" data-format="json">JSON</button><button class="secondary" data-export="events" data-format="csv">CSV</button></div></div><p>Chronological UTC events. Finding evidence retains its full context independently of timeline filters.</p><div id="timeline" class="table-wrap"></div><div class="toolbar"><button id="previous" class="secondary" disabled>Previous</button><span id="page"></span><button id="next" class="secondary" disabled>Next</button></div></section>
+<footer>No data is sent to a hosted service. Exports still contain sensitive identifiers; store them carefully.</footer></main></body></html>

@@ -15,3 +15,6 @@ triage = "cloudtrail_triage.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+cloudtrail_triage = ["static/*"]

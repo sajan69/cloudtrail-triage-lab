@@ -1,0 +1,611 @@
+{
+  "cases": 65,
+  "environment": {
+    "duckdb": "1.5.6",
+    "package": "0.2.0",
+    "python": "3.12.14"
+  },
+  "events": 660,
+  "limitations": [
+    "Synthetic labels are scenario judgments, not independently verified incidents.",
+    "Development and holdout seeds use shared templates; this does not measure real-world generalization.",
+    "Rules were not tuned using these reserved seeds. Background volume and case prevalence are artificial.",
+    "Undefined ratios are null; results are case-level, not event-level or production accuracy."
+  ],
+  "method": "Fixed rule thresholds; any finding evidence intersecting a case marks that case positive for the rule. Cross-case findings mark every intersected case.",
+  "rule_metrics": {
+    "CT001": {
+      "f1": 0.6666666666666666,
+      "false_positive_rate": 0.08333333333333333,
+      "fn": 0,
+      "fp": 5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "tn": 55,
+      "tp": 5
+    },
+    "CT002": {
+      "f1": 0.6666666666666666,
+      "false_positive_rate": 0.08333333333333333,
+      "fn": 0,
+      "fp": 5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "tn": 55,
+      "tp": 5
+    },
+    "CT003": {
+      "f1": 1.0,
+      "false_positive_rate": 0.0,
+      "fn": 0,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "tn": 60,
+      "tp": 5
+    }
+  },
+  "runs": [
+    {
+      "cases": 13,
+      "counts": {
+        "CT001": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT002": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT003": {
+          "fn": 0,
+          "fp": 0,
+          "tn": 12,
+          "tp": 1
+        }
+      },
+      "cross_case_findings": 0,
+      "events": 132,
+      "findings": 5,
+      "outcomes": [
+        {
+          "case_id": "permission_probe",
+          "expected_rules": [
+            "CT001"
+          ],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "console_without_mfa",
+          "expected_rules": [
+            "CT002"
+          ],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "cross_region_sequence",
+          "expected_rules": [
+            "CT003"
+          ],
+          "predicted_rules": [
+            "CT003"
+          ]
+        },
+        {
+          "case_id": "federated_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_unknown",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_present",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "failed_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "low_volume_denials",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "single_action_retry",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "planned_multi_region",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "approved_break_glass",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "authorized_permission_audit",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "routine_activity",
+          "expected_rules": [],
+          "predicted_rules": []
+        }
+      ],
+      "seed": 101
+    },
+    {
+      "cases": 13,
+      "counts": {
+        "CT001": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT002": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT003": {
+          "fn": 0,
+          "fp": 0,
+          "tn": 12,
+          "tp": 1
+        }
+      },
+      "cross_case_findings": 0,
+      "events": 132,
+      "findings": 5,
+      "outcomes": [
+        {
+          "case_id": "permission_probe",
+          "expected_rules": [
+            "CT001"
+          ],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "console_without_mfa",
+          "expected_rules": [
+            "CT002"
+          ],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "cross_region_sequence",
+          "expected_rules": [
+            "CT003"
+          ],
+          "predicted_rules": [
+            "CT003"
+          ]
+        },
+        {
+          "case_id": "federated_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_unknown",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_present",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "failed_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "low_volume_denials",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "single_action_retry",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "planned_multi_region",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "approved_break_glass",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "authorized_permission_audit",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "routine_activity",
+          "expected_rules": [],
+          "predicted_rules": []
+        }
+      ],
+      "seed": 203
+    },
+    {
+      "cases": 13,
+      "counts": {
+        "CT001": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT002": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT003": {
+          "fn": 0,
+          "fp": 0,
+          "tn": 12,
+          "tp": 1
+        }
+      },
+      "cross_case_findings": 0,
+      "events": 132,
+      "findings": 5,
+      "outcomes": [
+        {
+          "case_id": "permission_probe",
+          "expected_rules": [
+            "CT001"
+          ],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "console_without_mfa",
+          "expected_rules": [
+            "CT002"
+          ],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "cross_region_sequence",
+          "expected_rules": [
+            "CT003"
+          ],
+          "predicted_rules": [
+            "CT003"
+          ]
+        },
+        {
+          "case_id": "federated_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_unknown",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_present",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "failed_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "low_volume_denials",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "single_action_retry",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "planned_multi_region",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "approved_break_glass",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "authorized_permission_audit",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "routine_activity",
+          "expected_rules": [],
+          "predicted_rules": []
+        }
+      ],
+      "seed": 307
+    },
+    {
+      "cases": 13,
+      "counts": {
+        "CT001": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT002": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT003": {
+          "fn": 0,
+          "fp": 0,
+          "tn": 12,
+          "tp": 1
+        }
+      },
+      "cross_case_findings": 0,
+      "events": 132,
+      "findings": 5,
+      "outcomes": [
+        {
+          "case_id": "permission_probe",
+          "expected_rules": [
+            "CT001"
+          ],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "console_without_mfa",
+          "expected_rules": [
+            "CT002"
+          ],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "cross_region_sequence",
+          "expected_rules": [
+            "CT003"
+          ],
+          "predicted_rules": [
+            "CT003"
+          ]
+        },
+        {
+          "case_id": "federated_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_unknown",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_present",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "failed_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "low_volume_denials",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "single_action_retry",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "planned_multi_region",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "approved_break_glass",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "authorized_permission_audit",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "routine_activity",
+          "expected_rules": [],
+          "predicted_rules": []
+        }
+      ],
+      "seed": 409
+    },
+    {
+      "cases": 13,
+      "counts": {
+        "CT001": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT002": {
+          "fn": 0,
+          "fp": 1,
+          "tn": 11,
+          "tp": 1
+        },
+        "CT003": {
+          "fn": 0,
+          "fp": 0,
+          "tn": 12,
+          "tp": 1
+        }
+      },
+      "cross_case_findings": 0,
+      "events": 132,
+      "findings": 5,
+      "outcomes": [
+        {
+          "case_id": "permission_probe",
+          "expected_rules": [
+            "CT001"
+          ],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "console_without_mfa",
+          "expected_rules": [
+            "CT002"
+          ],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "cross_region_sequence",
+          "expected_rules": [
+            "CT003"
+          ],
+          "predicted_rules": [
+            "CT003"
+          ]
+        },
+        {
+          "case_id": "federated_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_unknown",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "mfa_present",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "failed_signin",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "low_volume_denials",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "single_action_retry",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "planned_multi_region",
+          "expected_rules": [],
+          "predicted_rules": []
+        },
+        {
+          "case_id": "approved_break_glass",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT002"
+          ]
+        },
+        {
+          "case_id": "authorized_permission_audit",
+          "expected_rules": [],
+          "predicted_rules": [
+            "CT001"
+          ]
+        },
+        {
+          "case_id": "routine_activity",
+          "expected_rules": [],
+          "predicted_rules": []
+        }
+      ],
+      "seed": 503
+    }
+  ],
+  "schema_version": 1,
+  "seeds": [
+    101,
+    203,
+    307,
+    409,
+    503
+  ],
+  "split": "holdout",
+  "synthetic": true,
+  "unit": "scenario case per rule"
+}

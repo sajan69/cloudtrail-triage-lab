@@ -1,0 +1,47 @@
+{
+  "environment": {
+    "duckdb": "1.5.6",
+    "logical_cpu_count": 9,
+    "machine": "x86_64",
+    "package": "0.2.0",
+    "python": "3.12.14",
+    "system": "Linux"
+  },
+  "limitations": [
+    "Single shared environment and synthetic workload; no AWS latency or collection measured.",
+    "No competitor/baseline speedup comparison, load test or throughput guarantee.",
+    "Hardware, storage, cache state and concurrent load affect these measurements."
+  ],
+  "median_ms": {
+    "detect_ms": 31.077,
+    "filtered_timeline_ms": 14.266,
+    "ingest_ms": 1892.724
+  },
+  "method": "Fresh database per import; wall-clock timings include validation, connections and SQL. Repeated input can benefit from OS caches.",
+  "samples": [
+    {
+      "detect_ms": 31.077,
+      "filtered_timeline_ms": 12.677,
+      "ingest_ms": 1892.724
+    },
+    {
+      "detect_ms": 30.201,
+      "filtered_timeline_ms": 14.266,
+      "ingest_ms": 1893.91
+    },
+    {
+      "detect_ms": 32.223,
+      "filtered_timeline_ms": 18.558,
+      "ingest_ms": 1819.661
+    }
+  ],
+  "schema_version": 1,
+  "synthetic": true,
+  "workload": {
+    "events": 1032,
+    "expected_findings": 5,
+    "input_bytes": 582865,
+    "repeats": 3,
+    "seed": 42
+  }
+}

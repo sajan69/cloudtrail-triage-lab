@@ -1,0 +1,19 @@
+{
+  "duplicate_records_skipped": 132,
+  "events_inserted": 132,
+  "exports_verified": [
+    "json",
+    "csv"
+  ],
+  "filtered_timeline_events": 3,
+  "findings_by_rule": {
+    "CT001": 2,
+    "CT002": 2,
+    "CT003": 1
+  },
+  "http_with_token": 200,
+  "http_without_token": 403,
+  "notice": "Five development findings include two deliberate benign lookalikes. No AWS calls; temporary data removed.",
+  "selected_finding_evidence_events": 2,
+  "synthetic": true
+}

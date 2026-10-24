@@ -1,8 +1,9 @@
 """Case-level evaluation of fixed rules on reserved synthetic fixture seeds."""
 
-from collections import Counter
+from importlib.metadata import version
 import json
 from pathlib import Path
+import platform
 import re
 from tempfile import TemporaryDirectory
 
@@ -89,6 +90,7 @@ def evaluate_suite(seeds=HOLDOUT_SEEDS):
             runs.append(evaluate_fixture(folder / "events.json", folder / "labels.json"))
     combined = {rule: {key: sum(run["counts"][rule][key] for run in runs) for key in ("tp", "fp", "fn", "tn")} for rule in RULES}
     return {"schema_version": 1, "synthetic": True, "split": "holdout", "unit": "scenario case per rule",
+        "environment": {"python": platform.python_version(), "duckdb": version("duckdb"), "package": version("cloudtrail-triage-lab")},
         "seeds": list(seeds), "events": sum(r["events"] for r in runs), "cases": sum(r["cases"] for r in runs),
         "rule_metrics": {rule: metrics(counts) for rule, counts in combined.items()}, "runs": runs,
         "method": "Fixed rule thresholds; any finding evidence intersecting a case marks that case positive for the rule. Cross-case findings mark every intersected case.",

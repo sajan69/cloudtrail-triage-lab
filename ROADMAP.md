@@ -1,16 +1,21 @@
 # Implementation status
 
-Status: active. The ingestion, synthetic data and command-line detection layers are implemented. Dashboard and evaluation remain in progress.
+Status: complete for the bounded local investigation workflow.
 
 - [x] Python packaging, local-data ignore rules and CI configuration.
-- [x] JSON/JSONL validation, normalized DuckDB storage and aggregate summary.
+- [x] Bounded JSON/JSONL validation, normalized DuckDB storage and summaries.
 - [x] Atomic imports, exact deduplication and conflicting-duplicate rollback.
-- [x] Seeded synthetic scenarios with separate labels and benign lookalikes.
-- [x] Three explainable detections and evidence output.
-- [ ] Dashboard, investigation timeline and CSV/JSON exports.
-- [ ] Held-out evaluation, measured performance and reproducible end-to-end demo.
-- [ ] Complete architecture/security documentation and final validation.
+- [x] Seeded scenarios with separate labels and benign lookalikes.
+- [x] Three explainable detection rules with event-ID evidence.
+- [x] Filtered UTC timelines, pagination and full finding evidence.
+- [x] Token-protected loopback dashboard, responsive controls and downloads.
+- [x] Bounded JSON/CSV exports with exclusive writes and formula mitigation.
+- [x] Reserved-seed evaluation, measured workloads and integrated local demo.
+- [x] Architecture, security, setup and limitation documentation.
+- [x] 60 local Python tests and real-browser interaction checks.
 
-36 tests cover malformed data, rollback, data minimization, fixtures, rule boundaries and identity/MFA semantics. The 132-event development fixture imports once, re-imports as 132 duplicates, and produces five findings including two deliberate benign lookalikes. This is not an independent accuracy measurement.
+CI checks the current revision on Python 3.11/3.12/3.13 and installs the built package for a separate browser regression job. Consult the CI badge/results before treating a revision as validated.
 
-Next: build the local evidence timeline/dashboard and safe exports, then implement a held-out evaluator with confusion counts and per-rule false positives. Document development-versus-holdout separation and shared-template limitations. Add query/ingestion measurements before making performance claims. See docs/INPUT_FORMAT.md, docs/SCENARIOS.md and docs/DETECTIONS.md.
+The default development fixture has 132 synthetic events and five findings, including two deliberate benign lookalikes. Reserved-seed evaluation and local timing samples are recorded in docs/reports/ and explained in docs/EVALUATION.md.
+
+Live AWS collection, signature verification, multi-user/public hosting, automatic response and production-scale detection are outside this scope. Additional real-world datasets and independent scenario designs would be required for broader detection claims.

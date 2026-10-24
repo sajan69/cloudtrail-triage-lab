@@ -24,4 +24,4 @@ Labels associate event IDs with case-level judgments and expected rule IDs. They
 
 ## Evaluation boundary
 
-`--split holdout` produces separate IDs and a separate time range. Keep development fixtures for debugging and any threshold decisions; reserve independent seeds and scenario variants for final evaluation. Both splits currently share the same hand-authored scenario templates. Consequently, a split alone does not establish independent real-world validation or generalization. No accuracy measurements have been published yet, and fixtures must not be described as real attacks or verified incident logs.
+`--split holdout` produces separate IDs and a separate time range. Keep development fixtures for debugging and any threshold decisions; reserve independent seeds and scenario variants for final evaluation. Both splits currently share the same hand-authored scenario templates. Consequently, a split alone does not establish independent real-world validation or generalization. Reserved-seed case metrics are published in [EVALUATION.md](EVALUATION.md) with this limitation. Fixtures must not be described as real attacks or verified incident logs.

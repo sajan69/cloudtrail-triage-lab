@@ -1,31 +1,12 @@
 # CloudTrail Triage Lab
 
-**Status: active development.** JSON/JSONL ingestion and DuckDB summaries are implemented. Synthetic fixtures and three explainable detection rules are available. Dashboard and held-out evaluation work is in progress.
+[![CI](https://github.com/sajan69/cloudtrail-triage-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/sajan69/cloudtrail-triage-lab/actions/workflows/ci.yml)
 
-A local tool for turning CloudTrail-style audit events into an explainable investigation timeline. It combines Python/SQL data analysis, defensive security investigation and tested software engineering.
+A local Python/SQL toolkit for turning CloudTrail-shaped audit events into explainable findings and an investigation timeline. It validates imports, stores a minimized DuckDB projection, correlates three security signals, and provides a read-only browser dashboard and JSON/CSV exports.
 
-## Problem and intended users
+The bounded local workflow is implemented. It does not collect live AWS logs, verify log signatures or establish that an account is compromised.
 
-An analyst needs to connect audit events into a useful investigation rather than inspect isolated alerts. This lab will demonstrate a reproducible workflow using synthetic events, clear detection logic and documented false positives. Suspicious activity is an investigation lead, not proof of compromise.
-
-## Bounded MVP
-
-1. Validate and ingest CloudTrail Records JSON or JSONL into DuckDB using Python; handle malformed input and duplicates explicitly.
-2. Generate seeded synthetic datasets with scenario labels and benign lookalikes.
-3. Implement three explainable detection rules: permission-probing bursts, console sign-in without MFA, and suspicious same-principal activity across regions involving AI services.
-4. Provide a lightweight local dashboard with filters, an evidence timeline and CSV/JSON investigation exports.
-5. Evaluate rules on held-out scenarios separately from threshold tuning. Report actual confusion counts, precision, recall and false positives.
-6. Add automated tests, CI, a credential-free demo, architecture and security documentation.
-
-The detection rules and thresholds will be documented and tested during implementation. Logging prerequisites and incomplete telemetry must be explicit; no blanket claim of detecting every attack is intended.
-
-No held-out accuracy or performance measurements have been published. See [implementation status](ROADMAP.md) and the [input contract](docs/INPUT_FORMAT.md).
-
-## Data and execution
-
-Ingestion runs locally with no AWS account, paid APIs or cloud deployment. Real audit logs and normalized databases contain sensitive identities and infrastructure details; keep them out of version control.
-
-## Install and use (Python 3.11+)
+## Quick start (Python 3.11+)
 
 ```sh
 python -m venv .venv
@@ -33,42 +14,73 @@ python -m venv .venv
 . .venv/bin/activate
 # Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install -e .
-mkdir data
-triage ingest path/to/events.json --db data/events.duckdb
-triage summary --db data/events.duckdb
-python -m unittest discover -s tests -v
+triage demo
 ```
 
-## Synthetic fixture
+The demo runs a real local import/query/detection/export/HTTP workflow using temporary synthetic data, checks its results, and removes the temporary files. No AWS account, credentials or paid services are required.
+
+To open the dashboard:
 
 ```sh
 triage generate --out data/demo --seed 42
 triage ingest data/demo/events.json --db data/demo.duckdb
-triage summary --db data/demo.duckdb
-triage detect --db data/demo.duckdb
-# Re-importing the equivalent JSONL adds no new events:
-triage ingest data/demo/events.jsonl --db data/demo.duckdb
+triage serve --db data/demo.duckdb
 ```
 
-The default fixture has 132 synthetic events in 13 labeled cases. Labels remain separate from events and include benign lookalikes that should remain visible in later false-positive analysis. The generator requires a fresh output directory. See [scenario design](docs/SCENARIOS.md). The development fixture produces five findings, including two deliberate benign false positives; these are development checks, not an accuracy estimate. [Rule definitions and evidence](docs/DETECTIONS.md) explain thresholds, identity/MFA handling and logging coverage.
+Open the complete local URL printed by `serve`, including its fragment token. Stop with Ctrl+C. The generator requires a fresh destination directory; retain an existing fixture or choose a new directory rather than overwriting it.
 
-Inputs are limited to 10 MiB and 20,000 records. Imports are strict by default; `--skip-invalid` skips schema-invalid records, while syntax errors or conflicting duplicates still abort. An exact re-import is a no-op with duplicate counts. Errors report codes without echoing input values. See [supported fields and atomicity](docs/INPUT_FORMAT.md).
+## Features
+
+- Bounded UTF-8 Records JSON/JSONL imports, explicit invalid-record handling, atomic writes, exact deduplication and conflicting-duplicate rollback.
+- Normalized, data-minimized DuckDB storage; no raw request bodies, access-key fields or arbitrary payloads.
+- CT001: IAM denial bursts with action diversity in a rolling five-minute window.
+- CT002: explicit successful IAMUser/Root console sign-ins without MFA; unknown/federated MFA excluded.
+- CT003: a different-Region Bedrock invocation after an IAM denial for the same actor/account within 15 minutes.
+- Filtered UTC timelines, full finding evidence, pagination, local dashboard and bounded JSON/CSV exports.
+- Seeded synthetic scenarios, reserved-seed case evaluation, integrated demo and measured local workloads.
+
+Findings are investigation leads, not proof of compromise. Unknown actors, missing events, incomplete Region coverage, identity changes and legitimate lookalikes affect results.
+
+## Investigation commands
+
+```sh
+triage summary --db data/demo.duckdb
+triage detect --db data/demo.duckdb
+triage timeline --db data/demo.duckdb --source bedrock.amazonaws.com
+mkdir exports
+triage export --db data/demo.duckdb --kind findings --format csv --out exports/findings.csv
+```
+
+Inputs are limited to 10 MiB and 20,000 records per file. Imports are strict by default; `--skip-invalid` skips record-validation errors but syntax errors and conflicting duplicates still abort. Exports refuse more than 10,000 records instead of silently truncating. CSV mitigates formula-like cells; JSON retains normalized values. Existing export files are never replaced.
+
+The dashboard binds only to 127.0.0.1 and requires a per-process token for data access. It uses same-origin assets, Host/Origin checks, a restrictive Content Security Policy and text-only rendering of log values. Do not expose it as a public/multi-user service or modify its database during investigation. Real logs, databases and exports remain sensitive; keep them out of version control.
+
+## Evaluation and measurements
+
+```sh
+triage evaluate
+triage benchmark --background 1000 --repeats 3
+```
+
+Five reserved synthetic seeds cover 660 events and 65 cases. CT001 and CT002 each have 5 true positives and 5 false positives (50% precision); CT003 has 5 true positives and no false positives in this small suite. Development and reserved seeds share scenario templates, so these results do not establish real-world generalization. False positives are retained and documented.
+
+The [evaluation guide](docs/EVALUATION.md) records the method, confusion counts, software/environment details, measured import/query times and limitations. [Machine-readable reports](docs/reports/) allow inspection without relying on summary claims. No production performance or accuracy claim is made.
 
 ## Verification
 
-36 automated tests cover ingestion atomicity, data minimization, deterministic fixtures, rolling-window boundaries, account/actor separation, MFA semantics and read-only detection. CI runs the suite and synthetic CLI workflow on Python 3.11, 3.12 and 3.13. Check the [CI results](https://github.com/sajan69/cloudtrail-triage-lab/actions/workflows/ci.yml) for the current revision.
+```sh
+python -m unittest discover -s tests -v
+triage demo
+```
 
-## Progress and finish line
+60 Python tests cover ingestion, data minimization, identity/MFA semantics, rolling-window boundaries, timeline filters, exports, dashboard access and evaluation. CI runs Python 3.11–3.13 plus a separate installed-package browser check for controls, downloads, mobile layout and inert HTML rendering. The browser job uploads a dashboard screenshot. See the [CI results](https://github.com/sajan69/cloudtrail-triage-lab/actions/workflows/ci.yml) for the current revision and [local browser-check instructions](docs/EVALUATION.md#integrated-checks).
 
-- [x] Confirm repository access and agree a bounded scope.
-- [x] Add project scaffolding and safe local-data ignore rules.
-- [x] Implement ingestion and data-quality tests.
-- [x] Add seeded scenarios and three detection rules.
-- [ ] Add dashboard, evidence timeline and exports.
-- [ ] Publish held-out evaluation and reproducible demo.
-- [ ] Pass CI and document setup, architecture, evaluation methods and limitations.
+## Documentation
 
-## Design reference
-
-[AWS incident-response guide for CloudTrail investigations](https://aws.amazon.com/blogs/security/incident-response-guide-for-aws-cloudtrail-investigations-part-2/) informs the proposed investigation workflow. Implementation will verify current AWS event fields and logging prerequisites against official documentation.
-
+- [Input and storage contract](docs/INPUT_FORMAT.md)
+- [Detection rules and logging prerequisites](docs/DETECTIONS.md)
+- [Timelines, dashboard and exports](docs/INVESTIGATION.md)
+- [Scenario design and label limitations](docs/SCENARIOS.md)
+- [Evaluation and measured results](docs/EVALUATION.md)
+- [Architecture and security boundaries](docs/ARCHITECTURE.md)
+- [Implementation status](ROADMAP.md)

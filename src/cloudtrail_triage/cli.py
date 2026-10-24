@@ -16,6 +16,8 @@ from .queries import Filters, timeline
 from .exports import render_export, write_export
 from .dashboard import serve
 from .evaluate import evaluate_suite
+from .benchmark import benchmark
+from .demo import demo
 
 
 def main(argv=None):
@@ -60,6 +62,10 @@ def main(argv=None):
     dashboard.add_argument("--port", type=int, default=8765)
     evaluation = commands.add_parser("evaluate", help="Evaluate fixed rules on reserved synthetic holdout seeds")
     evaluation.add_argument("--seed", type=int, action="append")
+    commands.add_parser("demo", help="Run the credential-free integrated local demonstration")
+    measurement = commands.add_parser("benchmark", help="Measure a bounded synthetic local workload")
+    measurement.add_argument("--background", type=int, default=1000)
+    measurement.add_argument("--repeats", type=int, default=3)
     args = parser.parse_args(argv)
     try:
         if args.command == "serve":
@@ -73,6 +79,10 @@ def main(argv=None):
             result = detect(args.db)
         elif args.command == "evaluate":
             result = evaluate_suite() if args.seed is None else evaluate_suite(tuple(args.seed))
+        elif args.command == "demo":
+            result = demo()
+        elif args.command == "benchmark":
+            result = benchmark(background=args.background, repeats=args.repeats)
         elif args.command == "timeline":
             filters = Filters(**{key: getattr(args, key) for key in ["account", "principal", "region", "source", "started_at", "ended_at"]})
             result = timeline(args.db, filters, limit=args.limit, offset=args.offset)

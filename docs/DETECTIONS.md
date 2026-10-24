@@ -30,7 +30,7 @@ Check the current event configuration for every service/action. AWS currently do
 
 ## Development fixture and evaluation status
 
-The seed-42 development fixture contains 132 synthetic events. It produces five findings: two CT001, two CT002 and one CT003. Three correspond to the suspicious scenario templates; the other two are deliberately benign permission-audit and emergency-access lookalikes. These are reproducible development checks, not a held-out accuracy estimate. Independent evaluation, threshold justification, query performance and dashboard work remain pending.
+The seed-42 development fixture contains 132 synthetic events. It produces five findings: two CT001, two CT002 and one CT003. Three correspond to the suspicious scenario templates; the other two are deliberately benign permission-audit and emergency-access lookalikes. These are reproducible development checks, not a held-out accuracy estimate. The dashboard, exports, reserved-seed case metrics and local measurements are documented in [INVESTIGATION.md](INVESTIGATION.md) and [EVALUATION.md](EVALUATION.md). The reserved seeds share templates and do not constitute independent real-world validation.
 
 ## Primary references (reviewed 24 October 2026)
 

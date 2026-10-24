@@ -1,0 +1,6 @@
+{
+  "name": "triage-browser-checks",
+  "private": true,
+  "scripts": { "test": "node check.cjs" },
+  "devDependencies": { "playwright": "1.58.0" }
+}

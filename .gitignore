@@ -13,3 +13,5 @@ exports/
 *.db
 coverage.xml
 .coverage
+node_modules/
+artifacts/

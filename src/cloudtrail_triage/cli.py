@@ -13,6 +13,7 @@ from .model import InputError
 from .scenarios import write_dataset
 from .detect import detect
 from .queries import Filters, timeline
+from .exports import render_export, write_export
 
 
 def main(argv=None):
@@ -40,6 +41,18 @@ def main(argv=None):
     investigation.add_argument("--until", dest="ended_at")
     investigation.add_argument("--limit", type=int, default=100)
     investigation.add_argument("--offset", type=int, default=0)
+    export = commands.add_parser("export", help="Write a bounded investigation export to a new file")
+    export.add_argument("--db", type=Path, required=True)
+    export.add_argument("--out", type=Path, required=True)
+    export.add_argument("--kind", choices=["events", "findings", "evidence"], default="events")
+    export.add_argument("--format", choices=["json", "csv"], default="json")
+    export.add_argument("--finding-id")
+    export.add_argument("--rule")
+    export.add_argument("--severity")
+    for field in ["account", "principal", "region", "source"]:
+        export.add_argument("--" + field)
+    export.add_argument("--from", dest="started_at")
+    export.add_argument("--until", dest="ended_at")
     args = parser.parse_args(argv)
     try:
         if args.command == "ingest":
@@ -51,6 +64,12 @@ def main(argv=None):
         elif args.command == "timeline":
             filters = Filters(**{key: getattr(args, key) for key in ["account", "principal", "region", "source", "started_at", "ended_at"]})
             result = timeline(args.db, filters, limit=args.limit, offset=args.offset)
+        elif args.command == "export":
+            filters = Filters(**{key: getattr(args, key) for key in ["account", "principal", "region", "source", "started_at", "ended_at"]})
+            rendered = render_export(args.db, kind=args.kind, output_format=args.format, filters=filters,
+                finding_id=args.finding_id, rule=args.rule, severity=args.severity)
+            write_export(args.out, rendered)
+            result = {"exported": rendered.total, "kind": args.kind, "format": args.format}
         else:
             result = summarize(args.db)
         print(json.dumps(result, sort_keys=True, indent=2))

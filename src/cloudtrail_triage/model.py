@@ -23,6 +23,10 @@ def text(value, field: str, *, required: bool = False, limit: int = 1024):
     if (not isinstance(value, str) or not value or len(value) > limit
             or value != value.strip() or any(ord(c) < 32 or ord(c) == 127 for c in value)):
         raise InputError(f"invalid_{field}")
+    try:
+        value.encode("utf8")
+    except UnicodeEncodeError:
+        raise InputError(f"invalid_{field}") from None
     return value
 
 

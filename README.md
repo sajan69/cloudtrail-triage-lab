@@ -4,7 +4,7 @@
 
 A local Python/SQL toolkit for turning CloudTrail-shaped audit events into explainable findings and an investigation timeline. It validates imports, stores a minimized DuckDB projection, correlates three security signals, and provides a read-only browser dashboard and JSON/CSV exports.
 
-The bounded local workflow is implemented. It does not collect live AWS logs, verify log signatures or establish that an account is compromised.
+It runs entirely locally and does not collect live AWS logs, verify log signatures or establish that an account is compromised.
 
 ## Quick start (Python 3.11+)
 
@@ -83,4 +83,3 @@ triage demo
 - [Scenario design and label limitations](docs/SCENARIOS.md)
 - [Evaluation and measured results](docs/EVALUATION.md)
 - [Architecture and security boundaries](docs/ARCHITECTURE.md)
-- [Implementation status](ROADMAP.md)
